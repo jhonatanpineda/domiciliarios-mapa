@@ -1,74 +1,76 @@
-// Configura tus propios datos de Firebase
-//const firebaseConfig = {
-  //apiKey: "AIzaSyBQzZi7XOnI4JoaEyIeDTt1gBN4urDEVjQ",
-    //authDomain: "gpt-4-381501.firebaseapp.com",
-    //projectId: "gpt-4-381501",
-    //storageBucket: "gpt-4-381501.appspot.com",
-    //messagingSenderId: "306716257983",
-    //appId: "1:306716257983:web:66db7a5cb3b6faf00a600a",
-    //measurementId: "G-SCX5RWQCG0"
-// Configura tus propios datos de Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyBQzZi7XOnI4JoaEyIeDTt1gBN4urDEVjQ",
-    authDomain: "gpt-4-381501.firebaseapp.com",
-    projectId: "gpt-4-381501",
-    storageBucket: "gpt-4-381501.appspot.com",
-    messagingSenderId: "306716257983",
-    appId: "1:306716257983:web:66db7a5cb3b6faf00a600a",
-  };
-  
-  // Inicializa Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore(app);
-  
-  document.getElementById("domiciliary-form").addEventListener("submit", async (e) => {
+document.addEventListener("DOMContentLoaded", function () {
+  const domiciliaries = [];
+
+  document.getElementById("domiciliary-form").addEventListener("submit", (e) => {
     e.preventDefault();
-  
+
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
-  
+
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
+      navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-  
-        try {
-          await db.collection("domiciliarios").add({
-            name,
-            phone,
-            location: new firebase.firestore.GeoPoint(lat, lng),
-          });
-          alert("Domiciliario registrado exitosamente");
-        } catch (error) {
-          console.error("Error al registrar domiciliario:", error);
-        }
+
+        const domiciliary = {
+          name,
+          phone,
+          lat,
+          lng,
+          marker: null,
+        };
+
+        addDomiciliaryMarker(domiciliary);
+        domiciliaries.push(domiciliary);
+        alert("Domiciliario registrado exitosamente");
       });
     } else {
       alert("La geolocalización no es compatible con este navegador.");
     }
   });
-  
-  function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 10,
-      center: { lat: -34.397, lng: 150.644 },
-    });
-  
-    // Crea marcadores para cada domiciliario y añádelos al mapa
-    db.collection("domiciliarios").onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          const doc = change.doc;
-          const data = doc.data();
-          const marker = new google.maps.Marker({
-            position: {
-              lat: data.location.latitude,
-              lng: data.location.longitude,
-            },
-            map,
-            title: data.name,
-          });
-        }
-      });
-    });
+
+  const map = L.map("map").setView([0, 0], 2);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  function addDomiciliaryMarker(domiciliary) {
+    const marker = L.marker([domiciliary.lat, domiciliary.lng]).addTo(map);
+    marker.bindPopup(`<b>${domiciliary.name}</b><br>Teléfono: ${domiciliary.phone}`);
+    domiciliary.marker = marker;
   }
+
+  function updateDomiciliaryLocation(domiciliary, lat, lng) {
+    domiciliary.lat = lat;
+    domiciliary.lng = lng;
+    domiciliary.marker.setLatLng([lat, lng]);
+  }
+
+  function watchDomiciliaryLocation(domiciliary) {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          updateDomiciliaryLocation(domiciliary, lat, lng);
+        },
+        (error) => {
+          console.error("Error al obtener la ubicación:", error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maxAge: 0,
+        }
+      );
+    } else {
+      alert("La geolocalización no es compatible con este navegador.");
+    }
+  }
+
+  // Iniciar seguimiento de la ubicación de todos los domiciliarios registrados
+  domiciliaries.forEach((domiciliary) => {
+    watchDomiciliaryLocation(domiciliary);
+  });
+});
