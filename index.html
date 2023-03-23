@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Domiciliarios en tiempo real</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domiciliarios en tiempo real</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div id="map">
     <form id="domiciliary-form">
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" required />
-        <label for="phone">Teléfono:</label>
-        <input type="text" id="phone" required />
-        <button type="submit">Registrar</button>
+      <h3>Registrar Domiciliario</h3>
+      <label for="name">Nombre:</label>
+      <input type="text" id="name" required />
+      <label for="phone">Teléfono:</label>
+      <input type="text" id="phone" required />
+      <button type="submit">Registrar</button>
     </form>
-    <div id="map"></div>
-    <script src="scripts.js"></script>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="scripts.js"></script>
 </body>
 </html>
-
