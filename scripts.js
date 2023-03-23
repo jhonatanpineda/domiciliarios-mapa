@@ -35,11 +35,18 @@ document.addEventListener("DOMContentLoaded", function () {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
-  function addDomiciliaryMarker(domiciliary) {
-    const marker = L.marker([domiciliary.lat, domiciliary.lng]).addTo(map);
-    marker.bindPopup(`<b>${domiciliary.name}</b><br>Teléfono: ${domiciliary.phone}`);
-    domiciliary.marker = marker;
-  }
+function addDomiciliaryMarker(domiciliary) {
+  const motoIcon = L.icon({
+    iconUrl: 'moto.png',
+    iconSize: [38, 38], // Tamaño del ícono en píxeles (ajusta los valores según sea necesario)
+    iconAnchor: [19, 38], // Punto de anclaje en el que se ubicará el ícono en el marcador
+    popupAnchor: [0, -38] // Punto de anclaje para la ventana emergente
+  });
+
+  const marker = L.marker([domiciliary.lat, domiciliary.lng], { icon: motoIcon }).addTo(map);
+  marker.bindPopup(`<b>${domiciliary.name}</b><br>Teléfono: ${domiciliary.phone}`);
+  domiciliary.marker = marker;
+}
 
   function updateDomiciliaryLocation(domiciliary, lat, lng) {
     domiciliary.lat = lat;
