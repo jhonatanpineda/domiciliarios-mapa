@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Domiciliarios en tiempo real</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";></script>
-    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js"></script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQzZi7XOnI4JoaEyIeDTt1gBN4urDEVjQ&callback=initMap"
-      async
-      defer
-    ></script>
-  </head>
-  <body>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
     <form id="domiciliary-form">
-      <label for="name">Nombre:</label>
-      <input type="text" id="name" required />
-      <label for="phone">Teléfono:</label>
-      <input type="text" id="phone" required />
-      <button type="submit">Registrar</button>
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" required />
+        <label for="phone">Teléfono:</label>
+        <input type="text" id="phone" required />
+        <button type="submit">Registrar</button>
     </form>
     <div id="map"></div>
     <script src="scripts.js"></script>
-  </body>
+</body>
 </html>
+
