@@ -1,10 +1,17 @@
-/* Establece el tamaño del mapa */
-#map {
-  height: 500px;
+html, body, #map {
+  height: 100%;
   width: 100%;
-}
-
-body {
   margin: 0;
   padding: 0;
+}
+
+#domiciliary-form {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
 }
