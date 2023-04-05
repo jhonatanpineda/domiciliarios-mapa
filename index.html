@@ -1,24 +1,109 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Domiciliarios en tiempo real</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    label, input, button {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    textarea {
+      font-size: 20px;
+      width: 100%;
+      height: 300px;
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+  <script>
+    function generarNumerosAleatorios(cantidad, primerosDigitos, segundosDigitos) {
+      const numeros = new Set();
+      while (numeros.size < cantidad) {
+        const numero = `${primerosDigitos[Math.floor(Math.random() * primerosDigitos.length)]}${segundosDigitos[Math.floor(Math.random() * segundosDigitos.length)]}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`;
+        numeros.add(numero);
+      }
+      return Array.from(numeros).sort();
+    }
+
+    function generarNumeros() {
+      const cantidad = parseInt(document.getElementById("cantidad").value, 10);
+      const primerosDigitos = document.getElementById("primerosDigitos").value.split(" ").map(Number).filter(n => !isNaN(n) && n >= 0 && n <= 9);
+      const segundosDigitos = document.getElementById("segundosDigitos").value.split(" ").map(Number).filter(n => !isNaN(n) && n >= 0 && n <= 9);
+
+      const numerosGenerados = generarNumerosAleatorios(cantidad, primerosDigitos, segundosDigitos);
+
+      const numerosTextArea = document.getElementById("numeros");
+      numerosTextArea.value = "Los números generados son:\n\n";
+
+      let ultimoPrimerDigito = null;
+      numerosGenerados.forEach(numero => {
+        const primerDigito = numero.charAt(0);
+        if (ultimoPrimerDigito !== null && ultimoPrimerDigito !== primerDigito) {
+          numerosTextArea.value += "\n";
+        }
+        numerosTextArea.value += `${numero}\n`;
+        ultimoPrimerDigito = primerDigito;
+      });
+    }
+  </script>
+  <title>Generador de números</title>
 </head>
 <body>
-  <div id="map">
-    <form id="domiciliary-form">
-      <h3>Registrar Domiciliario</h3>
-      <label for="name">Nombre:</label>
-      <input type="text" id="name" required />
-      <label for="phone">Teléfono:</label>
-      <input type="text" id="phone" required />
-      <button type="submit">Registrar</button>
-    </form>
+  <div class="container">
+    <label for="cantidad">Cantidad de números:</label>
+    <input type="number" id="cantidad" min="0">
+
+    <label for="primerosDigitos">Primeros dígitos (0-9 separados por espacios):</label>
+    <input type="text" id="primerosDigitos">
+
+    <label for="segundosDigitos">Segundos dígitos (0-9 separados por espacios):</label>
+    <input type="text" id="segundosDigitos">
+
+    <button onclick="generarNumeros()">Generar números</button>
+
+    <textarea id="numeros" readonly></textarea>
   </div>
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="scripts.js"></script>
 </body>
 </html>
+
+
