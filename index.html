@@ -150,6 +150,23 @@
   const pre = document.createElement("pre");
   pre.textContent = tsvText;
   numerosContainer.appendChild(pre);
+
+  // Botón para copiar al portapapeles
+  const copyButton = document.createElement("button");
+  copyButton.textContent = "Copiar al portapapeles";
+  numerosContainer.appendChild(copyButton);
+
+  copyButton.addEventListener("click", () => {
+    navigator.clipboard.writeText(tsvText).then(
+      () => {
+        alert("Texto copiado al portapapeles.");
+      },
+      (err) => {
+        console.error("Error al copiar el texto: ", err);
+        alert("Error al copiar el texto.");
+      }
+    );
+  });
 }
   </script>
   <title>Generador de números</title>
