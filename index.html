@@ -120,18 +120,36 @@
     cuartosDigitos
   );
 
-  const numerosDiv = document.getElementById("numeros");
-  numerosDiv.textContent = "Los números generados son:\n\n";
+  const numerosContainer = document.getElementById("numeros");
+  numerosContainer.innerHTML = "";
 
-  let ultimoPrimerDigito = null;
-  numerosGenerados.forEach(numero => {
+  const columnas = {};
+  numerosGenerados.forEach((numero) => {
     const primerDigito = numero.charAt(0);
-    if (ultimoPrimerDigito !== null && ultimoPrimerDigito !== primerDigito) {
-      numerosDiv.textContent += "\n";
+    if (!columnas.hasOwnProperty(primerDigito)) {
+      columnas[primerDigito] = [];
     }
-    numerosDiv.textContent += `${numero}\n`;
-    ultimoPrimerDigito = primerDigito;
+    columnas[primerDigito].push(numero);
   });
+
+  const tsvArray = [];
+  const columnKeys = Object.keys(columnas).sort();
+  const maxRows = Math.max(...columnKeys.map((key) => columnas[key].length));
+
+  for (let i = 0; i < maxRows; i++) {
+    const row = [];
+    columnKeys.forEach((key) => {
+      const value = columnas[key][i] || "";
+      row.push(value);
+    });
+    tsvArray.push(row.join("\t"));
+  }
+
+  const tsvText = tsvArray.join("\n");
+
+  const pre = document.createElement("pre");
+  pre.textContent = tsvText;
+  numerosContainer.appendChild(pre);
 }
   </script>
   <title>Generador de números</title>
